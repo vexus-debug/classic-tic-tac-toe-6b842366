@@ -13,6 +13,15 @@ export interface UpdateEntry {
 
 export const updates: UpdateEntry[] = [
   {
+    version: "v2.4.2",
+    date: "October 27, 2026",
+    title: "Tidier dashboard sidebar",
+    kind: "improvement",
+    items: [
+      { kind: "improvement", text: "Sidebar sections start collapsed; tap a section title to expand it. The section for your current page opens automatically." },
+    ],
+  },
+  {
     version: "v2.4.1",
     date: "October 27, 2026",
     title: "Dental overview shows only what your role needs",
