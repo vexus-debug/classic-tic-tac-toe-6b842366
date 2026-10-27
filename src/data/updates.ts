@@ -13,6 +13,16 @@ export interface UpdateEntry {
 
 export const updates: UpdateEntry[] = [
   {
+    version: "v2.4.1",
+    date: "October 27, 2026",
+    title: "Dental overview shows only what your role needs",
+    kind: "improvement",
+    items: [
+      { kind: "improvement", text: "Accountants, nurses, assistants, lab and procurement staff now get their own focused overview." },
+      { kind: "fix", text: "Overview shortcuts no longer point to pages your role can't open." },
+    ],
+  },
+  {
     version: "v2.4.0",
     date: "October 27, 2026",
     title: "Dashboards match the Clinexus website look",
