@@ -51,7 +51,7 @@ import {
 import { useOrg } from "@/hooks/useOrg";
 import { cn } from "@/lib/utils";
 
-type DashboardMode = "owner" | "dentist" | "receptionist";
+type DashboardMode = "owner" | "dentist" | "receptionist" | "finance" | "support" | "stock";
 type ScheduleItem = {
   id: string;
   patientId?: string;
@@ -87,10 +87,14 @@ function getGreeting() {
   return "Good evening";
 }
 
-function roleMode(role: string): DashboardMode {
+export function roleMode(role: string): DashboardMode {
   if (["owner", "admin", "manager"].includes(role)) return "owner";
-  if (role === "dentist") return "dentist";
-  return "receptionist";
+  if (["dentist", "hygienist"].includes(role)) return "dentist";
+  if (role === "receptionist") return "receptionist";
+  if (role === "accountant") return "finance";
+  if (["nurse", "assistant"].includes(role)) return "support";
+  if (["lab_technician", "lab_assistant", "procurement_officer"].includes(role)) return "stock";
+  return "support";
 }
 
 function ProgressRing({ completed, total }: { completed: number; total: number }) {
@@ -136,6 +140,9 @@ const kpiTones: Record<DashboardMode, Tone[]> = {
   owner: ["success", "info", "warning", "destructive"],
   dentist: ["info", "success", "info", "warning"],
   receptionist: ["warning", "info", "success", "destructive"],
+  finance: ["success", "success", "destructive", "warning"],
+  support: ["warning", "info", "success", "info"],
+  stock: ["info", "warning", "info", "success"],
 };
 
 function Sparkline({ data, color }: { data: number[]; color: string }) {
