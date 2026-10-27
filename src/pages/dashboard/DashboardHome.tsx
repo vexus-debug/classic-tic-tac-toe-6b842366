@@ -49,6 +49,7 @@ import {
   useWeeklyAppointments,
 } from "@/hooks/useDashboardData";
 import { useOrg } from "@/hooks/useOrg";
+import { hasPageAccess } from "@/config/roleAccess";
 import { cn } from "@/lib/utils";
 
 type DashboardMode = "owner" | "dentist" | "receptionist" | "finance" | "support" | "stock";
@@ -266,13 +267,16 @@ function StandardDashboardHome() {
   const emptyDay = weeklyData.filter((day) => day.count === Math.min(...weeklySeries)).at(0)?.day;
   const s = stats || { totalPatients: 0, todayAppointments: 0, pendingPayments: 0, monthlyRevenue: 0 };
 
-  const hero = mode === "owner"
+  type Hero = { eyebrow: string; title: string; action: string; to: string; icon: typeof Activity };
+  type Kpi = { label: string; value: string; detail: string; icon: typeof Activity; series: number[] };
+  type ActionItem = { count: number | null; text: string; action: string; to: string; icon: typeof Activity };
+  let hero: Hero = mode === "owner"
     ? { eyebrow: "Clinic pulse", title: `${schedule.length} appointments shape today`, action: "Review clinic", to: `${basePath}/appointments`, icon: Activity }
     : mode === "dentist"
       ? { eyebrow: "Your clinical day", title: nextAppointment ? `${nextAppointment.patientName} is next` : "Your chair is clear", action: "Open schedule", to: `${basePath}/appointments`, icon: Stethoscope }
       : { eyebrow: "Front desk now", title: activeQueue.length ? `${activeQueue.length} patients need attention` : "The queue is clear", action: activeQueue.length ? "Manage queue" : "Book appointment", to: activeQueue.length ? `${basePath}/waiting-list` : `${basePath}/appointments`, icon: ListChecks };
 
-  const kpis = mode === "owner"
+  let kpis: Kpi[] = mode === "owner"
     ? [
         { label: "Monthly revenue", value: formatCurrency(s.monthlyRevenue), detail: "Collected this month", icon: TrendingUp, series: revenueSeries },
         { label: "Patients", value: s.totalPatients.toLocaleString(), detail: "Clinic-wide total", icon: Users, series: weeklySeries },
@@ -299,7 +303,7 @@ function StandardDashboardHome() {
       ? `${emptyDay} has the lightest appointment load this week; consider moving recalls into those open slots.`
       : "Today’s schedule is balanced across the clinic.";
 
-  const actions = mode === "owner"
+  let actions: ActionItem[] = mode === "owner"
     ? [
         { count: pulse?.recallsDue || 0, text: "recalls due", action: "Send reminders", to: `${basePath}/patients`, icon: Clock3 },
         { count: pulse?.pendingInvoiceCount || 0, text: "invoices outstanding", action: "Review billing", to: `${basePath}/billing`, icon: CreditCard },
@@ -413,11 +417,11 @@ function StandardDashboardHome() {
 
       {mode === "dentist" && <DentistWaitingRoomCard staffId={pulse?.assignedStaffId || null} />}
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4" data-tour="dashboard-kpi-cards">
+      {kpis.length > 0 && <div className="grid grid-cols-2 gap-3 lg:grid-cols-4" data-tour="dashboard-kpi-cards">
         {kpis.map((kpi, i) => <KpiTile key={kpi.label} {...kpi} tone={kpiTones[mode][i]} />)}
-      </div>
+      </div>}
 
-      <Card className="border-border/60">
+      {showClinicFloor && <Card className="border-border/60">
         <CardContent className="p-4">
           <div className="mb-3 flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Chairs right now</p>
@@ -442,10 +446,10 @@ function StandardDashboardHome() {
             </div>
           )}
         </CardContent>
-      </Card>
+      </Card>}
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.8fr)]">
-        <Card className="border-border/60">
+      <div className={cn("grid gap-4", showSchedule && "lg:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.8fr)]")}>
+        {showSchedule && <Card className="border-border/60">
           <CardHeader className="flex flex-row items-start justify-between gap-4 pb-2">
             <div>
               <CardTitle className="text-base">{mode === "dentist" ? "Your patients today" : "Today's schedule"}</CardTitle>
@@ -483,31 +487,31 @@ function StandardDashboardHome() {
               </div>
             )}
           </CardContent>
-        </Card>
+        </Card>}
 
         <div className="space-y-3">
           <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Needs attention</p>
           {actions.map((item, i) => {
-            const tone: Tone = item.count === 0 ? "success" : (["warning", "destructive", "info"] as Tone[])[i % 3];
+            const tone: Tone = item.count === null ? "info" : item.count === 0 ? "success" : (["warning", "destructive", "info"] as Tone[])[i % 3];
             return (
               <Link key={item.text} to={item.to} className="group flex items-center gap-3 rounded-lg border border-border/70 bg-card p-4 transition-colors hover:bg-muted/50">
                 <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-md", toneSurface[tone])}><item.icon className="h-4 w-4" strokeWidth={iconStroke} /></div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm text-foreground"><span className="text-lg font-bold tabular-nums">{item.count}</span> {item.text}</p>
+                  <p className="text-sm text-foreground">{item.count !== null && <span className="text-lg font-bold tabular-nums">{item.count} </span>}{item.text}</p>
                   <p className="text-xs font-medium text-primary">{item.action}</p>
                 </div>
                 <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" strokeWidth={iconStroke} />
               </Link>
             );
           })}
-          <div className="rounded-lg border border-info/25 bg-info/5 p-4">
+          {showSchedule && <div className="rounded-lg border border-info/25 bg-info/5 p-4">
             <div className="flex items-center gap-2 text-info"><Sparkles className="h-4 w-4" strokeWidth={iconStroke} /><p className="text-xs font-semibold uppercase">Insight</p></div>
             <p className="mt-2 text-sm leading-6 text-foreground">{dailyInsight}</p>
-          </div>
+          </div>}
         </div>
       </div>
 
-      {mode === "owner" && (
+      {(mode === "owner" || mode === "finance") && (
         <div className="grid gap-4 lg:grid-cols-2">
           <Card className="border-border/60">
             <CardHeader className="pb-2"><CardTitle className="text-base">Revenue trend</CardTitle><CardDescription>Collections, last six months</CardDescription></CardHeader>
