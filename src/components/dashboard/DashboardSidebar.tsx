@@ -1,11 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarFooter,
 } from "@/components/ui/sidebar";
-import { LogOut, Building2, Shield, GitBranch } from "lucide-react";
+import { LogOut, Building2, Shield, GitBranch, ChevronDown } from "lucide-react";
 import { BranchSwitcher } from "@/components/dashboard/BranchSwitcher";
 import { useLocation, useNavigate } from "react-router-dom";
 import clinexusLogoRect from "@/assets/site/clinexus-logo-white.png";
@@ -39,6 +39,7 @@ export function DashboardSidebar() {
   const orgRole = currentOrg?.role || "receptionist";
   const clinicType = currentOrg?.clinic_type || "dental";
   const config = getClinicConfig(clinicType);
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (isMobile) setOpenMobile(false);
@@ -177,15 +178,24 @@ export function DashboardSidebar() {
           );
           if (visibleItems.length === 0) return null;
 
+          const hasActive = visibleItems.some((i) => location.pathname === `${basePath}/${i.path}`);
+          const isOpen = collapsed || (openGroups[group.label] ?? hasActive);
           return (
             <SidebarGroup key={group.label} className="mb-1">
               {!collapsed && (
-                <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.18em] text-sidebar-foreground/35 font-semibold px-2 mb-1 flex items-center gap-2">
-                   <span className="h-px flex-1 bg-sidebar-border" />
-                  {group.label}
-                   <span className="h-px flex-1 bg-sidebar-border" />
+                <SidebarGroupLabel asChild className="text-[9px] uppercase tracking-[0.18em] text-sidebar-foreground/50 font-semibold px-2 mb-1">
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    onClick={() => setOpenGroups((s) => ({ ...s, [group.label]: !isOpen }))}
+                    className="flex w-full items-center gap-2 hover:text-sidebar-foreground/80"
+                  >
+                    <span className="flex-1 text-left">{group.label}</span>
+                    <ChevronDown className={cn("h-3 w-3 transition-transform", !isOpen && "-rotate-90")} />
+                  </button>
                 </SidebarGroupLabel>
               )}
+              {isOpen && (
               <SidebarGroupContent>
                 <SidebarMenu className="gap-0.5">
                   {visibleItems.map((item) => (
@@ -195,6 +205,7 @@ export function DashboardSidebar() {
                   ))}
                 </SidebarMenu>
               </SidebarGroupContent>
+              )}
             </SidebarGroup>
           );
         })}
