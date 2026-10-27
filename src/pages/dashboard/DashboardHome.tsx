@@ -316,6 +316,54 @@ function StandardDashboardHome() {
           { count: schedule.filter((item) => item.status === "scheduled").length, text: "appointments ahead", action: "Confirm bookings", to: `${basePath}/appointments`, icon: CalendarDays },
         ];
 
+  if (mode === "finance") {
+    hero = { eyebrow: "Finance today", title: pulse?.pendingInvoiceCount ? `${pulse.pendingInvoiceCount} invoices awaiting payment` : "All invoices settled", action: "Open billing", to: `${basePath}/billing`, icon: CircleDollarSign };
+    kpis = [
+      { label: "Monthly revenue", value: formatCurrency(s.monthlyRevenue), detail: "Collected this month", icon: TrendingUp, series: revenueSeries },
+      { label: "Collected today", value: formatCurrency(pulse?.todayCollections || 0), detail: "Recorded payments", icon: CircleDollarSign, series: paymentSeries },
+      { label: "Outstanding", value: formatCurrency(pulse?.pendingInvoiceValue || 0), detail: `${pulse?.pendingInvoiceCount || 0} invoices`, icon: CreditCard, series: paymentSeries },
+      { label: "Pending invoices", value: (pulse?.pendingInvoiceCount || 0).toString(), detail: "To follow up", icon: CreditCard, series: paymentSeries },
+    ];
+    actions = [
+      { count: pulse?.pendingInvoiceCount || 0, text: "invoices outstanding", action: "Review billing", to: `${basePath}/billing`, icon: CreditCard },
+      { count: null, text: "Expenses", action: "Record or review expenses", to: `${basePath}/expenses`, icon: CircleDollarSign },
+      { count: null, text: "Reports", action: "Open financial reports", to: `${basePath}/reports`, icon: TrendingUp },
+    ];
+  } else if (mode === "support") {
+    hero = { eyebrow: "Clinical support", title: activeQueue.length ? `${activeQueue.length} patients waiting` : "No patients waiting", action: "Open queue", to: `${basePath}/waiting-list`, icon: ListChecks };
+    kpis = [
+      { label: "Live queue", value: activeQueue.length.toString(), detail: "Patients checked in", icon: ListChecks, series: weeklySeries },
+      { label: "Appointments", value: schedule.length.toString(), detail: `${completed} completed`, icon: CalendarDays, series: weeklySeries },
+      { label: "Chairs in use", value: schedule.filter((i) => i.status.startsWith("in")).length.toString(), detail: "Right now", icon: Stethoscope, series: weeklySeries },
+      { label: "Next patient", value: nextAppointment?.time || "—", detail: nextAppointment?.patientName || "None scheduled", icon: Clock3, series: weeklySeries },
+    ];
+    actions = [
+      { count: activeQueue.length, text: "patients in queue", action: "Prepare chairs", to: `${basePath}/waiting-list`, icon: ListChecks },
+      { count: null, text: "Inventory", action: "Check clinical supplies", to: `${basePath}/inventory`, icon: Activity },
+    ];
+  } else if (mode === "stock") {
+    const isLab = currentOrg?.role !== "procurement_officer";
+    hero = isLab
+      ? { eyebrow: "Lab desk", title: "Your lab cases", action: "Open lab cases", to: `${basePath}/lab/cases`, icon: Activity }
+      : { eyebrow: "Procurement", title: "Stock and supplies", action: "Open inventory", to: `${basePath}/inventory`, icon: Activity };
+    kpis = [];
+    actions = isLab
+      ? [
+          { count: null, text: "Lab cases", action: "Review active cases", to: `${basePath}/lab/cases`, icon: Activity },
+          { count: null, text: "Lab billing", action: "Review lab invoices", to: `${basePath}/lab/billing`, icon: CreditCard },
+        ]
+      : [
+          { count: null, text: "Inventory", action: "Check stock levels", to: `${basePath}/inventory`, icon: Activity },
+          { count: null, text: "Inventory costs", action: "Review spending", to: `${basePath}/inventory-costs`, icon: CircleDollarSign },
+          { count: null, text: "Expenses", action: "Record purchases", to: `${basePath}/expenses`, icon: CreditCard },
+        ];
+  }
+  const role = currentOrg?.role || "receptionist";
+  actions = actions.filter((a) => hasPageAccess(role, a.to.slice(basePath.length + 1), currentOrg?.clinic_type));
+  if (!hasPageAccess(role, hero.to.slice(basePath.length + 1), currentOrg?.clinic_type)) hero = { ...hero, to: `${basePath}/messages`, action: "Open messages" };
+  const showClinicFloor = ["owner", "dentist", "receptionist", "support"].includes(mode);
+  const showSchedule = showClinicFloor;
+
   const showOnboarding = mode === "owner" && s.totalPatients === 0;
 
   const chairs = useMemo(() => {
