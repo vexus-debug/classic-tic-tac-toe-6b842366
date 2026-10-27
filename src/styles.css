@@ -684,35 +684,35 @@
    Mirrors the public site's clinical typography, teal accent, crisp borders,
    and restrained depth while preserving dense, scannable workspace layouts. */
 .dashboard-theme {
-  --background: 180 25% 98%;
-  --foreground: 197 43% 8%;
+  --background: 180 15% 98%;
+  --foreground: 200 32% 9%;
   --card: 0 0% 100%;
-  --card-foreground: 197 43% 8%;
+  --card-foreground: 200 32% 9%;
   --popover: 0 0% 100%;
-  --popover-foreground: 197 43% 8%;
-  --primary: 172 74% 28%;
+  --popover-foreground: 200 32% 9%;
+  --primary: 178 65% 26%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 172 30% 94%;
-  --secondary-foreground: 197 43% 8%;
-  --muted: 180 20% 96%;
-  --muted-foreground: 197 12% 38%;
-  --accent: 172 60% 92%;
-  --accent-foreground: 197 43% 8%;
-  --border: 180 18% 86%;
-  --input: 180 18% 86%;
-  --ring: 172 74% 28%;
-  --app-canvas: 180 25% 97%;
-  --app-canvas-accent: 172 40% 95%;
-  --widget-border: 180 18% 86%;
-  --widget-shadow: 0 1px 2px hsl(197 43% 8% / 0.03), 0 8px 24px -20px hsl(197 43% 8% / 0.22);
-  --sidebar-background: 197 43% 6%;
-  --sidebar-foreground: 168 21% 94%;
-  --sidebar-primary: 172 84% 39%;
-  --sidebar-primary-foreground: 197 43% 6%;
-  --sidebar-accent: 186 51% 12%;
-  --sidebar-accent-foreground: 168 21% 94%;
-  --sidebar-border: 172 84% 39% / 0.18;
-  --sidebar-ring: 172 84% 39%;
+  --secondary: 180 16% 94%;
+  --secondary-foreground: 200 32% 9%;
+  --muted: 180 14% 95%;
+  --muted-foreground: 200 12% 36%;
+  --accent: 178 30% 93%;
+  --accent-foreground: 200 32% 9%;
+  --border: 180 14% 88%;
+  --input: 180 14% 88%;
+  --ring: 178 65% 26%;
+  --app-canvas: 180 15% 97%;
+  --app-canvas-accent: 178 20% 95%;
+  --widget-border: 180 14% 88%;
+  --widget-shadow: none;
+  --sidebar-background: 200 32% 6%;
+  --sidebar-foreground: 180 12% 92%;
+  --sidebar-primary: 176 42% 62%;
+  --sidebar-primary-foreground: 200 32% 6%;
+  --sidebar-accent: 200 22% 12%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 200 16% 16%;
+  --sidebar-ring: 176 42% 62%;
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   font-family: "DM Sans", system-ui, sans-serif;
@@ -721,26 +721,26 @@
 
 .dashboard-theme.dark,
 .dashboard-dark .dashboard-theme {
-  --background: 197 43% 6%;
-  --foreground: 168 21% 94%;
-  --card: 186 51% 10%;
-  --card-foreground: 168 21% 94%;
-  --popover: 186 51% 10%;
-  --popover-foreground: 168 21% 94%;
-  --primary: 172 84% 39%;
-  --primary-foreground: 197 43% 6%;
-  --secondary: 186 40% 15%;
-  --secondary-foreground: 168 21% 94%;
-  --muted: 186 38% 13%;
-  --muted-foreground: 168 12% 68%;
-  --accent: 172 45% 16%;
-  --accent-foreground: 168 21% 94%;
-  --border: 172 28% 20%;
-  --input: 172 28% 20%;
-  --app-canvas: 197 43% 5%;
-  --app-canvas-accent: 186 45% 9%;
-  --widget-border: 172 24% 19%;
-  --widget-shadow: 0 1px 2px hsl(197 60% 2% / 0.25), 0 12px 28px -22px hsl(197 60% 2% / 0.8);
+  --background: 200 32% 8%;
+  --foreground: 180 12% 93%;
+  --card: 200 26% 12%;
+  --card-foreground: 180 12% 93%;
+  --popover: 200 26% 12%;
+  --popover-foreground: 180 12% 93%;
+  --primary: 176 42% 62%;
+  --primary-foreground: 200 32% 8%;
+  --secondary: 200 20% 16%;
+  --secondary-foreground: 180 12% 93%;
+  --muted: 200 20% 15%;
+  --muted-foreground: 190 10% 66%;
+  --accent: 178 30% 17%;
+  --accent-foreground: 180 12% 93%;
+  --border: 200 16% 20%;
+  --input: 200 16% 20%;
+  --app-canvas: 200 32% 7%;
+  --app-canvas-accent: 200 28% 9%;
+  --widget-border: 200 16% 20%;
+  --widget-shadow: none;
 }
 
 .dashboard-theme h1,
@@ -766,8 +766,7 @@
 }
 
 .dashboard-theme.dashboard-bg {
-  background:
-    linear-gradient(180deg, hsl(var(--app-canvas)) 0%, hsl(var(--background)) 42%, hsl(var(--app-canvas)) 100%);
+  background: hsl(var(--background));
 }
 
 .dashboard-theme .dashboard-sidebar [data-sidebar="sidebar"] {
@@ -780,14 +779,14 @@
    the desktop rail (same values in light and dark — .dashboard-theme.dark
    does not override sidebar tokens). */
 .dashboard-sidebar[data-sidebar="sidebar"][data-mobile="true"] {
-  --sidebar-background: 197 43% 6%;
-  --sidebar-foreground: 168 21% 94%;
-  --sidebar-primary: 172 84% 39%;
-  --sidebar-primary-foreground: 197 43% 6%;
-  --sidebar-accent: 186 51% 12%;
-  --sidebar-accent-foreground: 168 21% 94%;
-  --sidebar-border: 172 84% 39% / 0.18;
-  --sidebar-ring: 172 84% 39%;
+  --sidebar-background: 200 32% 6%;
+  --sidebar-foreground: 180 12% 92%;
+  --sidebar-primary: 176 42% 62%;
+  --sidebar-primary-foreground: 200 32% 6%;
+  --sidebar-accent: 200 22% 12%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 200 16% 16%;
+  --sidebar-ring: 176 42% 62%;
   background: hsl(var(--sidebar-background));
 }
 
@@ -810,9 +809,9 @@
 
 .dashboard-theme .card-hover:hover,
 .dashboard-theme .stat-card:hover {
-  transform: translateY(-2px);
-  border-color: hsl(var(--primary) / 0.28);
-  box-shadow: 0 12px 28px -22px hsl(var(--foreground) / 0.35);
+  border-color: hsl(var(--primary) / 0.4);
+  box-shadow: none;
+  transition: border-color 120ms ease;
 }
 
 .dashboard-theme :where(input, textarea, select) {
@@ -820,7 +819,18 @@
 }
 
 .dashboard-theme :where(table thead) {
-  background: hsl(var(--muted) / 0.7);
+  background: hsl(var(--muted));
+}
+.dashboard-theme :where(table th) {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.7rem;
+}
+.dashboard-theme :where(table td) {
+  font-variant-numeric: tabular-nums;
+}
+.dashboard-theme :where(table tbody tr) {
+  border-bottom: 1px solid hsl(var(--border) / 0.5);
 }
 
 .dashboard-theme :where([role="dialog"], [role="menu"]) {
@@ -848,24 +858,24 @@
 .dashboard-dark [data-radix-popper-content-wrapper],
 .dashboard-dark [data-sonner-toaster],
 .dashboard-dark [data-vaul-drawer] {
-  --background: 197 43% 6%;
-  --foreground: 168 21% 94%;
-  --card: 186 51% 10%;
-  --card-foreground: 168 21% 94%;
-  --popover: 186 51% 10%;
-  --popover-foreground: 168 21% 94%;
-  --primary: 172 84% 39%;
-  --primary-foreground: 197 43% 6%;
-  --secondary: 186 40% 15%;
-  --secondary-foreground: 168 21% 94%;
-  --muted: 186 38% 13%;
-  --muted-foreground: 168 12% 68%;
-  --accent: 172 45% 16%;
-  --accent-foreground: 168 21% 94%;
-  --border: 172 28% 20%;
-  --input: 172 28% 20%;
-  --widget-border: 172 24% 19%;
-  --widget-shadow: 0 1px 2px hsl(197 60% 2% / 0.25), 0 12px 28px -22px hsl(197 60% 2% / 0.8);
+  --background: 200 32% 8%;
+  --foreground: 180 12% 93%;
+  --card: 200 26% 12%;
+  --card-foreground: 180 12% 93%;
+  --popover: 200 26% 12%;
+  --popover-foreground: 180 12% 93%;
+  --primary: 176 42% 62%;
+  --primary-foreground: 200 32% 8%;
+  --secondary: 200 20% 16%;
+  --secondary-foreground: 180 12% 93%;
+  --muted: 200 20% 15%;
+  --muted-foreground: 190 10% 66%;
+  --accent: 178 30% 17%;
+  --accent-foreground: 180 12% 93%;
+  --border: 200 16% 20%;
+  --input: 200 16% 20%;
+  --widget-border: 200 16% 20%;
+  --widget-shadow: none;
   color-scheme: dark;
   color: hsl(var(--foreground));
 }

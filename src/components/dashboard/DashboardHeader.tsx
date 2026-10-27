@@ -74,7 +74,7 @@ export function DashboardHeader({ onToggleAI, aiOpen, appearance = "light", onTo
   const isHome = currentPage === "Dashboard";
 
   return (
-    <header className="relative sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border bg-card/90 px-4 backdrop-blur-xl lg:px-8">
+    <header className="relative sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border/60 bg-card px-4 lg:px-8">
 
       {/* Desktop: icon-only */}
       <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground hidden md:flex" />

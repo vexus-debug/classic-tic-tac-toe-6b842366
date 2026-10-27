@@ -34,7 +34,7 @@ export function MobileTabBar({ aiOpen, onOpenAI, onCloseAI }: MobileTabBarProps)
 
   return (
     <nav
-      className="shrink-0 border-t border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80"
+      className="shrink-0 border-t border-border bg-background"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       aria-label="Main"
     >
