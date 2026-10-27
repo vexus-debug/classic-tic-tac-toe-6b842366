@@ -198,7 +198,7 @@ function OnboardingChecklist({ basePath, activeDentists, treatmentCount, patient
   const done = steps.filter((step) => step.done).length;
 
   return (
-    <div className="overflow-hidden rounded-lg bg-gradient-to-r from-primary/45 via-border to-primary/20 p-px">
+    <div className="overflow-hidden rounded-lg border border-border/80">
       <div className="grid gap-6 rounded-[7px] bg-card p-5 md:grid-cols-[1fr_auto] md:items-center">
         <div>
           <div className="mb-4 flex items-center gap-3">

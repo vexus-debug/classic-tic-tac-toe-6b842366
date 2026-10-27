@@ -13,6 +13,16 @@ export interface UpdateEntry {
 
 export const updates: UpdateEntry[] = [
   {
+    version: "v2.4.0",
+    date: "October 27, 2026",
+    title: "Dashboards match the Clinexus website look",
+    kind: "improvement",
+    items: [
+      { kind: "improvement", text: "Dashboards now use the same calm slate and teal colours as the website, in both light and dark mode." },
+      { kind: "improvement", text: "Cleaner cards and tables: thin borders, no glows or lifting effects, easier-to-scan numbers." },
+    ],
+  },
+  {
     version: "v2.3.1",
     date: "October 27, 2026",
     title: "More visible homepage backdrops",
