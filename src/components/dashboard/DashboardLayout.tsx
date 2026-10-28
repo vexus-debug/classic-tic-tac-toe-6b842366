@@ -27,13 +27,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <DentistVisitTourHost />
         <div className="flex flex-1 flex-col h-full overflow-hidden">
           <ViewAsBanner />
-          <HubTabs />
           <DashboardHeader
             onToggleAI={() => setAiOpen(!aiOpen)}
             aiOpen={aiOpen}
             appearance={appearance}
             onToggleAppearance={toggleAppearance}
           />
+          <HubTabs />
 
           {isMobile ? (
             <>
