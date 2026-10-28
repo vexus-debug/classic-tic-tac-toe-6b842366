@@ -177,6 +177,17 @@ export function DashboardSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
         )}
+        {useHubs && (
+          <SidebarGroup className="mb-1">
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <NavItem item={{ title: "Dashboard", path: "dashboard", icon: LayoutDashboard }} fullUrl={`${basePath}/dashboard`} />
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
         {useHubs
           ? hubs.map(({ hub, tabs }) => {
               const active = hubIsActive(hub, relativePath);
