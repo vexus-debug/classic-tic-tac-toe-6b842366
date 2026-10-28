@@ -177,7 +177,27 @@ export function DashboardSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
         )}
-        {config.navGroups.map((group) => {
+        {useHubs
+          ? hubs.map(({ hub, tabs }) => {
+              const active = hubIsActive(hub, relativePath);
+              const primaryTab = tabs.find((t) => t.path === hub.primaryPath) || tabs[0];
+              return (
+                <SidebarGroup key={hub.key} className="mb-0.5">
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <NavItem
+                          item={{ title: hub.title, path: primaryTab.path, icon: hub.icon }}
+                          fullUrl={`${basePath}/${primaryTab.path}`}
+                          active={active}
+                        />
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              );
+            })
+          : config.navGroups.map((group) => {
           const visibleItems = group.items.filter((item) =>
             hasPageAccess(orgRole, item.path, clinicType) &&
             !(isBranch && (item.path === "website-settings" || item.path === "shop-management"))
