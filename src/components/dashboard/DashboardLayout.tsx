@@ -3,6 +3,7 @@ import { useAppearance } from "@/hooks/useAppearance";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { DashboardHeader } from "./DashboardHeader";
+import { HubTabs } from "./HubTabs";
 import { AICopilotPanel } from "./AICopilotPanel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,6 +27,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <DentistVisitTourHost />
         <div className="flex flex-1 flex-col h-full overflow-hidden">
           <ViewAsBanner />
+          <HubTabs />
           <DashboardHeader
             onToggleAI={() => setAiOpen(!aiOpen)}
             aiOpen={aiOpen}
