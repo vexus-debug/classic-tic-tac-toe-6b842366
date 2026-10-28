@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useOrg } from "@/hooks/useOrg";
 import { hasPageAccess, getRoleLabel } from "@/config/roleAccess";
 import { getClinicConfig, sharedNavItems } from "@/config/clinicTypeConfig";
+import { visibleHubs, hubIsActive } from "@/config/navDomains";
 import { useUnreadCount, useRealtimeNotifications } from "@/hooks/useNotifications";
 import { useUnreadMessageCount, useRealtimeMessages } from "@/hooks/useMessages";
 import { motion, AnimatePresence } from "framer-motion";
@@ -39,6 +40,11 @@ export function DashboardSidebar() {
   const orgRole = currentOrg?.role || "receptionist";
   const clinicType = currentOrg?.clinic_type || "dental";
   const config = getClinicConfig(clinicType);
+  // Dental: 8 hub domains instead of 30+ individual links; other screens of
+  // each hub are reached through the tab bar under the header (HubTabs).
+  const useHubs = clinicType === "dental";
+  const hubs = useHubs ? visibleHubs(orgRole, clinicType, isBranch) : [];
+  const relativePath = extractRelativePath(location.pathname);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
