@@ -129,7 +129,8 @@ export const DENTAL_HUBS: HubDomain[] = [
 ];
 
 function pathMatchesTab(relativePath: string, tabPath: string): boolean {
-  return relativePath === tabPath || relativePath.startsWith(`${tabPath}/`);
+  // Exact matches, plus patient profile sub-routes (patients/:id).
+  return relativePath === tabPath || (tabPath === "patients" && relativePath.startsWith("patients/"));
 }
 
 export function getHubForPath(relativePath: string): HubDomain | undefined {
