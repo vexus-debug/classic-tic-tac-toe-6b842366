@@ -5,7 +5,7 @@ import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarFooter,
 } from "@/components/ui/sidebar";
-import { LogOut, Building2, Shield, GitBranch, ChevronDown } from "lucide-react";
+import { LogOut, Building2, Shield, GitBranch, ChevronDown, LayoutDashboard } from "lucide-react";
 import { BranchSwitcher } from "@/components/dashboard/BranchSwitcher";
 import { useLocation, useNavigate } from "react-router-dom";
 import clinexusLogoRect from "@/assets/site/clinexus-logo-white.png";
@@ -13,8 +13,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 import { useOrg } from "@/hooks/useOrg";
-import { hasPageAccess, getRoleLabel } from "@/config/roleAccess";
+import { hasPageAccess, getRoleLabel, extractRelativePath } from "@/config/roleAccess";
 import { getClinicConfig, sharedNavItems } from "@/config/clinicTypeConfig";
+import { visibleHubs, hubIsActive } from "@/config/navDomains";
 import { useUnreadCount, useRealtimeNotifications } from "@/hooks/useNotifications";
 import { useUnreadMessageCount, useRealtimeMessages } from "@/hooks/useMessages";
 import { motion, AnimatePresence } from "framer-motion";
@@ -39,6 +40,11 @@ export function DashboardSidebar() {
   const orgRole = currentOrg?.role || "receptionist";
   const clinicType = currentOrg?.clinic_type || "dental";
   const config = getClinicConfig(clinicType);
+  // Dental: 8 hub domains instead of 30+ individual links; other screens of
+  // each hub are reached through the tab bar under the header (HubTabs).
+  const useHubs = clinicType === "dental";
+  const hubs = useHubs ? visibleHubs(orgRole, clinicType, isBranch) : [];
+  const relativePath = extractRelativePath(location.pathname);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -53,8 +59,8 @@ export function DashboardSidebar() {
     navigate("/login");
   };
 
-  const NavItem = ({ item, fullUrl }: { item: any; fullUrl: string }) => {
-    const active = location.pathname === fullUrl;
+  const NavItem = ({ item, fullUrl, active: activeOverride }: { item: any; fullUrl: string; active?: boolean }) => {
+    const active = activeOverride ?? location.pathname === fullUrl;
     const badge =
       item.path === "messages" && unreadMsgCount > 0 ? unreadMsgCount :
       item.path === "notifications" && unreadCount > 0 ? unreadCount : 0;
@@ -171,7 +177,38 @@ export function DashboardSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
         )}
-        {config.navGroups.map((group) => {
+        {useHubs && (
+          <SidebarGroup className="mb-1">
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <NavItem item={{ title: "Dashboard", path: "dashboard", icon: LayoutDashboard }} fullUrl={`${basePath}/dashboard`} />
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+        {useHubs
+          ? hubs.map(({ hub, tabs }) => {
+              const active = hubIsActive(hub, relativePath);
+              const primaryTab = tabs.find((t) => t.path === hub.primaryPath) || tabs[0];
+              return (
+                <SidebarGroup key={hub.key} className="mb-0.5">
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <NavItem
+                          item={{ title: hub.title, path: primaryTab.path, icon: hub.icon }}
+                          fullUrl={`${basePath}/${primaryTab.path}`}
+                          active={active}
+                        />
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              );
+            })
+          : config.navGroups.map((group) => {
           const visibleItems = group.items.filter((item) =>
             hasPageAccess(orgRole, item.path, clinicType) &&
             !(isBranch && (item.path === "website-settings" || item.path === "shop-management"))
@@ -221,7 +258,10 @@ export function DashboardSidebar() {
           )}
           <SidebarGroupContent>
             <SidebarMenu className="gap-0.5">
-              {sharedNavItems.filter((item) => hasPageAccess(orgRole, item.path, clinicType)).map((item) => (
+              {sharedNavItems.filter((item) =>
+                hasPageAccess(orgRole, item.path, clinicType) &&
+                !(useHubs && item.path === "settings")
+              ).map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <NavItem item={item} fullUrl={`${basePath}/${item.path}`} />
                 </SidebarMenuItem>

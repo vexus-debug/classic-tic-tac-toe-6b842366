@@ -13,6 +13,18 @@ export interface UpdateEntry {
 
 export const updates: UpdateEntry[] = [
   {
+    version: "v2.5.0",
+    date: "October 28, 2026",
+    title: "Cleaner dental menu: 8 clear destinations",
+    kind: "improvement",
+    items: [
+      { kind: "improvement", text: "The dental menu now shows 8 clear destinations (Schedule, Patients, Clinical, Lab, Billing, Inventory, Insights, Settings) instead of 30+ separate links." },
+      { kind: "improvement", text: "Related screens live under tabs at the top of each page — for example Waiting List and Staff Schedules sit inside Schedule." },
+      { kind: "improvement", text: "Every old link still works; bookmarks and shared URLs are unaffected." },
+      { kind: "improvement", text: "Tabs respect your role: staff never see tabs for pages they can't open." },
+    ],
+  },
+  {
     version: "v2.4.2",
     date: "October 27, 2026",
     title: "Tidier dashboard sidebar",
