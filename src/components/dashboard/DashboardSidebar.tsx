@@ -5,7 +5,7 @@ import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarFooter,
 } from "@/components/ui/sidebar";
-import { LogOut, Building2, Shield, GitBranch, ChevronDown } from "lucide-react";
+import { LogOut, Building2, Shield, GitBranch, ChevronDown, LayoutDashboard } from "lucide-react";
 import { BranchSwitcher } from "@/components/dashboard/BranchSwitcher";
 import { useLocation, useNavigate } from "react-router-dom";
 import clinexusLogoRect from "@/assets/site/clinexus-logo-white.png";
