@@ -247,7 +247,10 @@ export function DashboardSidebar() {
           )}
           <SidebarGroupContent>
             <SidebarMenu className="gap-0.5">
-              {sharedNavItems.filter((item) => hasPageAccess(orgRole, item.path, clinicType)).map((item) => (
+              {sharedNavItems.filter((item) =>
+                hasPageAccess(orgRole, item.path, clinicType) &&
+                !(useHubs && item.path === "settings")
+              ).map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <NavItem item={item} fullUrl={`${basePath}/${item.path}`} />
                 </SidebarMenuItem>
