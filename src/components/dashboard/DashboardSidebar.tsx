@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 import { useOrg } from "@/hooks/useOrg";
-import { hasPageAccess, getRoleLabel } from "@/config/roleAccess";
+import { hasPageAccess, getRoleLabel, extractRelativePath } from "@/config/roleAccess";
 import { getClinicConfig, sharedNavItems } from "@/config/clinicTypeConfig";
 import { visibleHubs, hubIsActive } from "@/config/navDomains";
 import { useUnreadCount, useRealtimeNotifications } from "@/hooks/useNotifications";
@@ -59,8 +59,8 @@ export function DashboardSidebar() {
     navigate("/login");
   };
 
-  const NavItem = ({ item, fullUrl }: { item: any; fullUrl: string }) => {
-    const active = location.pathname === fullUrl;
+  const NavItem = ({ item, fullUrl, active: activeOverride }: { item: any; fullUrl: string; active?: boolean }) => {
+    const active = activeOverride ?? location.pathname === fullUrl;
     const badge =
       item.path === "messages" && unreadMsgCount > 0 ? unreadMsgCount :
       item.path === "notifications" && unreadCount > 0 ? unreadCount : 0;
