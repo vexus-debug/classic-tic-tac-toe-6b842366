@@ -26,8 +26,6 @@ export const updates: UpdateEntry[] = [
   },
   {
     version: "v2.4.2",
-  {
-    version: "v2.4.2",
     date: "October 27, 2026",
     title: "Tidier dashboard sidebar",
     kind: "improvement",
